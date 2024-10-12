@@ -54,6 +54,15 @@ def data_api():
     df = pd.DataFrame.from_dict(data=data["embeddings"])
     print(df)
     print('Size of the dataframe: {}'.format(df.shape))
+
+    if df.shape[0] < 50:
+        # Calculate how many rows to add
+        rows_to_add = 50 - df.shape[0]
+        # Create a DataFrame with random-filled rows
+        random_filled_rows = np.random.rand(rows_to_add, df.shape[1])
+        zero_filled_rows = pd.DataFrame(random_filled_rows, columns=df.columns)
+        # Concatenate the original DataFrame with the zero-filled rows
+        df = pd.concat([df, zero_filled_rows], ignore_index=True)
     
     pca_50 = PCA(n_components=50)
     pca_result_50 = pca_50.fit_transform(df)
